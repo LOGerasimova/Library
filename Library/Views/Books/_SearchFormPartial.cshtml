@@ -1,0 +1,29 @@
+@model SearchBooksRequest
+
+<form method="get" asp-controller="Books" asp-action="Index" class="search-form">
+    <div class="form-field">
+        <label asp-for="Id">ID</label>
+        <input asp-for="Id" inputmode="numeric" />
+    </div>
+    <div class="form-field">
+        <label asp-for="Title">Название</label>
+        <input asp-for="Title" />
+    </div>
+    <div class="form-field">
+        <label asp-for="Author">Автор</label>
+        <input asp-for="Author" />
+    </div>
+    <div class="form-field">
+        <label asp-for="YearOfPublication">Год издания</label>
+        <input asp-for="YearOfPublication" type="number" min="1450" max="9999" step="1" />
+    </div>
+    <div class="form-field">
+        <label asp-for="TocKeyword">Слово в оглавлении</label>
+        <input asp-for="TocKeyword" />
+    </div>
+    <input asp-for="PageSize" type="hidden" />
+    <div class="search-actions">
+        <button class="button button-primary" type="submit">Найти</button>
+        <a class="button button-secondary" asp-controller="Books" asp-action="Index">Сбросить</a>
+    </div>
+</form>

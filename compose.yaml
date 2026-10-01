@@ -1,0 +1,41 @@
+name: library
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: library-db
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: library_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./Library/Infrastructure/Database/Tables/books.sql:/docker-entrypoint-initdb.d/01-books.sql:ro
+      - ./Library/Infrastructure/Database/Indexes/xml_index_toc.sql:/docker-entrypoint-initdb.d/02-books-indexes.sql:ro
+      - ./Library/Infrastructure/Database/StoredProcedures/insert_book.sql:/docker-entrypoint-initdb.d/10-insert-book.sql:ro
+      - ./Library/Infrastructure/Database/StoredProcedures/update_book.sql:/docker-entrypoint-initdb.d/11-update-book.sql:ro
+      - ./Library/Infrastructure/Database/StoredProcedures/delete_book.sql:/docker-entrypoint-initdb.d/12-delete-book.sql:ro
+      - ./Library/Infrastructure/Database/StoredProcedures/get_book_by_id.sql:/docker-entrypoint-initdb.d/13-get-book-by-id.sql:ro
+      - ./Library/Infrastructure/Database/StoredProcedures/search_books.sql:/docker-entrypoint-initdb.d/15-search-books.sql:ro
+      - ./Library/Infrastructure/Database/StoredProcedures/search_books_count.sql:/docker-entrypoint-initdb.d/16-search-books-count.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: library-web
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres-data:

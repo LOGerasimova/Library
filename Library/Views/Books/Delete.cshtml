@@ -1,0 +1,20 @@
+@model BookCardDto
+@{
+    ViewData["Title"] = "Удаление книги";
+}
+
+<section class="page-heading">
+    <div>
+        <h1>Удалить книгу?</h1>
+        <p>Это действие нельзя отменить.</p>
+    </div>
+</section>
+
+<div class="confirmation-card">
+    <h2>@Model.Title</h2>
+    <p>@Model.Author · @Model.YearOfPublication.Year год</p>
+    <form method="post" asp-action="DeleteConfirmed" asp-route-bookId="@Model.Id" class="form-actions">
+        <button class="button button-danger" type="submit">Удалить книгу</button>
+        <a class="button button-secondary" asp-action="Details" asp-route-bookId="@Model.Id">Отмена</a>
+    </form>
+</div>

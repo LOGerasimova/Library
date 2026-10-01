@@ -1,0 +1,39 @@
+@model BookCardDto
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<section class="page-heading page-heading-actions">
+    <div>
+        <h1>@Model.Title</h1>
+        <p>@Model.Author · @Model.YearOfPublication.Year год</p>
+    </div>
+    <div class="form-actions">
+        <a class="button button-primary" asp-action="Edit" asp-route-bookId="@Model.Id">Редактировать</a>
+        <a class="button button-danger" asp-action="Delete" asp-route-bookId="@Model.Id">Удалить</a>
+    </div>
+</section>
+
+<dl class="book-details">
+    <dt>ID</dt>
+    <dd>@Model.Id</dd>
+    <dt>Автор</dt>
+    <dd>@Model.Author</dd>
+    <dt>Год издания</dt>
+    <dd>@Model.YearOfPublication.Year</dd>
+</dl>
+
+<section class="toc-card">
+    <h2>Оглавление</h2>
+    @if (string.IsNullOrWhiteSpace(Model.TableOfContentsHtml))
+    {
+        <p class="muted">Оглавление не указано.</p>
+    }
+    else
+    {
+        @* HTML создаётся XmlTocConverter из XML и кодирует заголовки узлов. *@
+        @Html.Raw(Model.TableOfContentsHtml)
+    }
+</section>
+
+<p><a asp-action="Index">← К списку книг</a></p>

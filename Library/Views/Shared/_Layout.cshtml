@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — Библиотека</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <a class="brand" asp-controller="Books" asp-action="Index">Библиотека</a>
+            <a class="button button-primary" asp-controller="Books" asp-action="Create">Добавить книгу</a>
+        </div>
+    </header>
+    <main class="container">
+        @if (TempData["SuccessMessage"] is string successMessage)
+        {
+            <div class="alert alert-success" role="status">@successMessage</div>
+        }
+        @RenderBody()
+    </main>
+    <script src="~/js/toc-editor.js" asp-append-version="true"></script>
+</body>
+</html>

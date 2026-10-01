@@ -1,0 +1,27 @@
+DROP FUNCTION IF EXISTS search_books_count(integer, text, text, timestamptz, text);
+
+CREATE OR REPLACE FUNCTION search_books_count(
+    p_id integer,
+    p_title text,
+    p_author text,
+    p_year_of_publication integer,
+    p_toc_keyword text)
+RETURNS integer
+LANGUAGE sql
+STABLE
+AS $$
+    SELECT count(*)::integer
+    FROM books AS b
+    WHERE (p_id IS NULL OR b.id = p_id)
+      AND (NULLIF(btrim(p_title), '') IS NULL
+           OR b.title ILIKE '%' || btrim(p_title) || '%')
+      AND (NULLIF(btrim(p_author), '') IS NULL
+           OR b.author ILIKE '%' || btrim(p_author) || '%')
+      AND (p_year_of_publication IS NULL
+           OR EXTRACT(YEAR FROM b.year_of_publication)::integer = p_year_of_publication)
+      AND (NULLIF(btrim(p_toc_keyword), '') IS NULL
+           OR to_tsvector('simple', COALESCE(xmlserialize(CONTENT b.contents_node AS text), ''))
+              @@ websearch_to_tsquery('simple', btrim(p_toc_keyword))
+           OR xmlserialize(CONTENT b.contents_node AS text)
+              ILIKE '%' || btrim(p_toc_keyword) || '%');
+$$;

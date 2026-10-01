@@ -1,0 +1,48 @@
+@model CreateBookRequest
+@{
+    ViewData["Title"] = "Новая книга";
+}
+
+<section class="page-heading">
+    <div>
+        <h1>Новая книга</h1>
+    </div>
+</section>
+
+<form method="post" asp-action="Create" class="book-form">
+    <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+    <div class="form-field">
+        <label asp-for="Title">Название</label>
+        <input asp-for="Title" autofocus />
+        <span asp-validation-for="Title" class="field-error"></span>
+    </div>
+    <div class="form-field">
+        <label asp-for="Author">Автор</label>
+        <input asp-for="Author" />
+        <span asp-validation-for="Author" class="field-error"></span>
+    </div>
+    <div class="form-field">
+        <label asp-for="YearOfPublication">Год издания</label>
+        <input asp-for="YearOfPublication" type="date" asp-format="{0:yyyy-MM-dd}" />
+        <span asp-validation-for="YearOfPublication" class="field-error"></span>
+    </div>
+    <div class="form-field">
+        <label asp-for="TableOfContentsHtml">Оглавление</label>
+        <div class="toc-editor" data-toc-editor>
+            <div class="toc-toolbar" role="toolbar" aria-label="Редактор оглавления">
+                <button type="button" data-command="insertOrderedList" title="Нумерованный список">1. Список</button>
+                <button type="button" data-command="insertUnorderedList" title="Маркированный список">• Список</button>
+                <button type="button" data-command="indent" title="Сделать вложенным">→ Вложить</button>
+                <button type="button" data-command="outdent" title="Уменьшить уровень">← Поднять</button>
+            </div>
+            <div class="toc-editor-canvas" contenteditable="true" role="textbox" aria-multiline="true"
+                 aria-label="Структура оглавления"></div>
+            <textarea asp-for="TableOfContentsHtml" class="toc-editor-source" aria-hidden="true" tabindex="-1"></textarea>
+        </div>
+        <span asp-validation-for="TableOfContentsHtml" class="field-error"></span>
+    </div>
+    <div class="form-actions">
+        <button class="button button-primary" type="submit">Сохранить</button>
+        <a class="button button-secondary" asp-action="Index">Отмена</a>
+    </div>
+</form>
